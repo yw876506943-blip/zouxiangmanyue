@@ -332,7 +332,7 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
           scrolled ? "bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-100" : "bg-transparent"
         )}>
           <div className="flex space-x-2 overflow-x-auto thin-scrollbar px-4 pb-2">
-            {categories.map(cat => (
+            {displayCategories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
@@ -1295,15 +1295,6 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
 }
 
 function PortfolioCard({ item, index, onClick }: { item: any, index: number, onClick: () => void, key?: React.Key }) {
-  const [liked, setLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(item.likes);
-
-  const handleLike = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setLiked(!liked);
-    setLikesCount(liked ? likesCount - 1 : likesCount + 1);
-  };
-
   return (
     <motion.div 
       layout
@@ -1313,7 +1304,7 @@ function PortfolioCard({ item, index, onClick }: { item: any, index: number, onC
       transition={{ delay: index * 0.05 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="rounded-2xl overflow-hidden bg-white shadow-sm border border-slate-100/60 group cursor-pointer"
+      className="rounded-2xl overflow-hidden bg-white shadow-sm border border-slate-100/60 group cursor-pointer relative"
     >
       <div className={cn("w-full relative overflow-hidden", item.height)}>
         <img 
@@ -1330,22 +1321,9 @@ function PortfolioCard({ item, index, onClick }: { item: any, index: number, onC
         <div className="absolute top-2 right-2 bg-black/30 backdrop-blur-md px-2 py-1 rounded-lg text-[10px] text-white font-medium">
           {item.category}
         </div>
-      </div>
-      <div className="p-3">
-        <p className="text-[13px] font-bold text-slate-800 line-clamp-2 leading-snug">{item.title}</p>
-        <div className="flex items-center justify-between mt-2.5">
-          <div className="flex items-center space-x-1.5">
-            <img src="https://picsum.photos/seed/avatar/32/32" className="w-4 h-4 rounded-full border border-slate-100" alt="avatar" />
-            <span className="text-[10px] font-medium text-slate-500">Kiko</span>
-          </div>
-          <motion.button 
-            whileTap={{ scale: 0.8 }}
-            onClick={handleLike}
-            className="flex items-center space-x-1 text-slate-400 z-10"
-          >
-            <Heart size={14} className={cn("transition-colors", liked ? "fill-rose-500 text-rose-500" : "")} />
-            <span className={cn("text-[11px] font-medium", liked ? "text-rose-500" : "")}>{likesCount}</span>
-          </motion.button>
+        
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8">
+          <p className="text-[13px] font-bold text-white line-clamp-2 leading-snug">{item.title}</p>
         </div>
       </div>
     </motion.div>
