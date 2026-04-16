@@ -1615,6 +1615,7 @@ function PortfolioPage({ onBack, items, setItems }: { onBack: () => void, items:
   const [activeTab, setActiveTab] = useState('全部');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSingleColumn, setIsSingleColumn] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const filteredItems = items.filter(item => {
     const matchTab = activeTab === '全部' || item.category === activeTab;
@@ -1627,9 +1628,12 @@ function PortfolioPage({ onBack, items, setItems }: { onBack: () => void, items:
     setActiveItem(null);
   };
   
-  const handleDelete = (id: string) => {
-    setItems(items.filter(i => i.id !== id));
-    setActiveItem(null);
+  const handleDelete = () => {
+    if (deleteConfirmId) {
+      setItems(items.filter(i => i.id !== deleteConfirmId));
+      setActiveItem(null);
+      setDeleteConfirmId(null);
+    }
   };
 
   const handleSave = (data: any) => {
@@ -1755,7 +1759,7 @@ function PortfolioPage({ onBack, items, setItems }: { onBack: () => void, items:
             item={activeItem} 
             onClose={() => setActiveItem(null)} 
             onUpdate={handleUpdate} 
-            onDelete={handleDelete} 
+            onDelete={(id: string) => setDeleteConfirmId(id)} 
             onEdit={(item: any) => {
               setEditingItem(item);
               setView('edit');
@@ -1764,6 +1768,55 @@ function PortfolioPage({ onBack, items, setItems }: { onBack: () => void, items:
           />
         )}
       </AnimatePresence>
+
+      {/* Delete Confirmation Dialog */}
+      {createPortal(
+        <AnimatePresence>
+          {deleteConfirmId && [
+            <motion.div 
+              key="overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setDeleteConfirmId(null)}
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+            />,
+            <motion.div 
+              key="content"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              onClick={e => e.stopPropagation()}
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[320px] bg-white rounded-3xl p-6 shadow-2xl z-[101]"
+            >
+              <div className="flex flex-col items-center">
+                <div className="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mb-4">
+                  <Trash2 size={24} />
+                </div>
+                <h3 className="text-center text-lg font-bold text-slate-800 mb-2">确认删除作品？</h3>
+                <p className="text-center text-sm text-slate-500 mb-6">
+                  删除后将无法恢复，确认要删除这个作品吗？
+                </p>
+                <div className="flex space-x-3 w-full">
+                  <button 
+                    onClick={() => setDeleteConfirmId(null)}
+                    className="flex-1 py-3 rounded-xl bg-slate-50 text-slate-600 font-bold text-sm active:scale-[0.98] transition-transform"
+                  >
+                    取消
+                  </button>
+                  <button 
+                    onClick={handleDelete}
+                    className="flex-1 py-3 rounded-xl bg-rose-500 text-white font-bold text-sm active:scale-[0.98] transition-transform shadow-md shadow-rose-500/20"
+                  >
+                    确认删除
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ]}
+        </AnimatePresence>,
+        document.body
+      )}
     </SubPageLayout>
   );
 }
