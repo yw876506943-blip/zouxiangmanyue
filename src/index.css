@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --color-lavender-50: #f5f3ff;
+  --color-lavender-100: #ede9fe;
+  --color-lavender-200: #ddd6fe;
+  --color-lavender-300: #c4b5fd;
+  --color-lavender-400: #a78bfa;
+  --color-lavender-500: #8b5cf6;
+  
+  --color-misty-50: #eff6ff;
+  --color-misty-100: #dbeafe;
+  --color-misty-200: #bfdbfe;
+  --color-misty-300: #93c5fd;
+  --color-misty-400: #60a5fa;
+  --color-misty-500: #3b82f6;
+
+  --color-pearl: #fdfdfd;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.05)];
+  }
+  .glass-dark {
+    @apply bg-white/90 backdrop-blur-lg border border-white/50 shadow-[0_8px_32px_0_rgba(31,38,135,0.08)];
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .thin-scrollbar::-webkit-scrollbar {
+    height: 3px;
+    width: 3px;
+  }
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+  }
+  .thin-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(203, 213, 225, 0.6);
+  }
+  .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.8);
+  }
+  .thin-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.3s;
+  }
+  .thin-scrollbar:hover {
+    scrollbar-color: rgba(203, 213, 225, 0.6) transparent;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-lavender-500 to-misty-500;
+  }
+}
+
+body {
+  @apply bg-pearl text-slate-800 antialiased selection:bg-lavender-200;
+  background-color: #f8fafc;
+  background-image: radial-gradient(at 40% 20%, hsla(250, 100%, 95%, 0.8) 0px, transparent 50%),
+                    radial-gradient(at 80% 0%, hsla(220, 100%, 95%, 0.8) 0px, transparent 50%),
+                    radial-gradient(at 0% 50%, hsla(250, 100%, 95%, 0.8) 0px, transparent 50%);
+  background-attachment: fixed;
+}
