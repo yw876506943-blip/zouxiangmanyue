@@ -132,13 +132,6 @@ export function Mine({ profile, setProfile, userRole, onBecomeCreator, onLogout 
                   </React.Fragment>
                 ))}
               </div>
-
-              <button 
-                onClick={() => setShowLogoutConfirm(true)}
-                className="w-full py-4 mt-4 rounded-2xl bg-white text-rose-500 font-bold text-[15px] hover:bg-rose-50 active:scale-[0.98] transition-all shadow-sm border border-rose-100"
-              >
-                退出登录
-              </button>
             </motion.div>
           </div>
         </motion.div>
@@ -364,6 +357,7 @@ function MenuItem({ icon, title, subtitle, onClick }: { icon: React.ReactNode, t
 
 function EditProfilePage({ profile, setProfile, userRole, onBack, showToast }: any) {
   const [formData, setFormData] = useState(profile);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   return (
     <motion.div 
@@ -390,9 +384,63 @@ function EditProfilePage({ profile, setProfile, userRole, onBack, showToast }: a
         </button>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 space-y-6">
         <EditProfile profile={formData} setProfile={setFormData} userRole={userRole} />
+        
+        {userRole !== 'user' && (
+          <div className="flex justify-center pt-8 pb-4">
+            <button 
+              onClick={() => setShowDeleteConfirm(true)}
+              className="text-xs text-slate-400 hover:text-rose-500 transition-colors px-4 py-2"
+            >
+              注销账号
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Delete Account Confirmation Modal */}
+      <AnimatePresence>
+        {showDeleteConfirm && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+            onClick={() => setShowDeleteConfirm(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={e => e.stopPropagation()}
+              className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl"
+            >
+              <h3 className="text-lg font-bold text-slate-800 mb-2 text-center">确认注销账号？</h3>
+              <p className="text-sm text-slate-500 text-center mb-6">注销后将无法恢复，所有数据将被清空</p>
+              
+              <div className="flex space-x-3">
+                <button 
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="flex-1 py-3 rounded-xl bg-slate-50 text-slate-600 font-bold text-sm active:scale-[0.98] transition-transform"
+                >
+                  取消
+                </button>
+                <button 
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    showToast('账号注销申请已提交');
+                    setTimeout(() => onBack(), 1500);
+                  }}
+                  className="flex-1 py-3 rounded-xl bg-rose-500 text-white font-bold text-sm active:scale-[0.98] transition-transform shadow-md shadow-rose-500/20"
+                >
+                  确认注销
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

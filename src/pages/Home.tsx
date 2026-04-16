@@ -117,7 +117,7 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
                   </div>
                 </div>
                 <button className="px-4 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-bold rounded-full transition-colors shrink-0">
-                  主页
+                  进入主页
                 </button>
               </div>
               <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-hide">
