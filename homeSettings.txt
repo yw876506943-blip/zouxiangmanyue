@@ -1,0 +1,436 @@
+{/* Home Settings Modal */}
+      <AnimatePresence>
+        {showHomeSettings && (
+          <motion.div
+            initial={{ opacity: 0, y: '100%' }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="fixed inset-0 z-50 bg-[#f8fafc] flex flex-col"
+          >
+            {/* Header */}
+            <div className="bg-white/80 backdrop-blur-md px-4 py-3 flex items-center justify-between shrink-0 border-b border-slate-100">
+              <button 
+                onClick={() => {
+                  if (settingsPage === 'main') setShowHomeSettings(false);
+                  else if (settingsPage === 'collection_detail') setSettingsPage('collections');
+                  else if (settingsPage === 'work_detail') {
+                    if (selectedCollectionForEdit) setSettingsPage('collection_detail');
+                    else setSettingsPage('portfolio');
+                  }
+                  else setSettingsPage('main');
+                }} 
+                className="p-2 -ml-2 text-slate-600 active:scale-95 transition-transform"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <h2 className="text-lg font-bold text-slate-800">
+                {settingsPage === 'main' && '主页设置'}
+                {settingsPage === 'profile' && '个人资料'}
+                {settingsPage === 'display' && '展示设置'}
+                {settingsPage === 'collections' && '精选合集设置'}
+                {settingsPage === 'portfolio' && '作品设置'}
+                {settingsPage === 'collection_detail' && selectedCollectionForEdit?.title}
+                {settingsPage === 'work_detail' && '作品管理'}
+              </h2>
+              <div className="w-8" /> {/* Spacer */}
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-4 pb-32">
+              <AnimatePresence mode="wait">
+                {settingsPage === 'main' && (
+                  <motion.div key="main" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-3">
+                    <button onClick={() => setSettingsPage('profile')} className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm border border-slate-100 active:scale-[0.98] transition-transform">
+                      <div className="flex items-center"><User size={20} className="mr-3 text-lavender-500" /> <span className="font-bold text-slate-800">个人资料</span></div>
+                      <ChevronRight size={20} className="text-slate-400" />
+                    </button>
+                    <button onClick={() => setSettingsPage('display')} className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm border border-slate-100 active:scale-[0.98] transition-transform">
+                      <div className="flex items-center"><Settings size={20} className="mr-3 text-lavender-500" /> <span className="font-bold text-slate-800">展示设置</span></div>
+                      <ChevronRight size={20} className="text-slate-400" />
+                    </button>
+                    <button onClick={() => setSettingsPage('collections')} className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm border border-slate-100 active:scale-[0.98] transition-transform">
+                      <div className="flex items-center"><FolderHeart size={20} className="mr-3 text-lavender-500" /> <span className="font-bold text-slate-800">精选合集设置</span></div>
+                      <ChevronRight size={20} className="text-slate-400" />
+                    </button>
+                    <button onClick={() => setSettingsPage('portfolio')} className="w-full bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm border border-slate-100 active:scale-[0.98] transition-transform">
+                      <div className="flex items-center"><Layers size={20} className="mr-3 text-lavender-500" /> <span className="font-bold text-slate-800">作品设置</span></div>
+                      <ChevronRight size={20} className="text-slate-400" />
+                    </button>
+                  </motion.div>
+                )}
+
+                {settingsPage === 'profile' && (
+                  <motion.div key="profile" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
+                    <EditProfile profile={profile} setProfile={setProfile} />
+                  </motion.div>
+                )}
+
+                {settingsPage === 'display' && (
+                  <motion.div key="display" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-slate-700">显示联系按钮</span>
+                        <button 
+                          onClick={() => setHomeSettings({...homeSettings, showContact: !homeSettings.showContact})}
+                          className={cn("w-12 h-6 rounded-full transition-colors relative", homeSettings.showContact ? "bg-emerald-400" : "bg-slate-200")}
+                        >
+                          <motion.div 
+                            animate={{ x: homeSettings.showContact ? 24 : 2 }} 
+                            className="w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm"
+                          />
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-slate-700">显示精选合集</span>
+                        <button 
+                          onClick={() => setHomeSettings({...homeSettings, showCollections: !homeSettings.showCollections})}
+                          className={cn("w-12 h-6 rounded-full transition-colors relative", homeSettings.showCollections ? "bg-emerald-400" : "bg-slate-200")}
+                        >
+                          <motion.div 
+                            animate={{ x: homeSettings.showCollections ? 24 : 2 }} 
+                            className="w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm"
+                          />
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-slate-700">显示地址</span>
+                        <button 
+                          onClick={() => setHomeSettings({...homeSettings, showLocation: !homeSettings.showLocation})}
+                          className={cn("w-12 h-6 rounded-full transition-colors relative", homeSettings.showLocation ? "bg-emerald-400" : "bg-slate-200")}
+                        >
+                          <motion.div 
+                            animate={{ x: homeSettings.showLocation ? 24 : 2 }} 
+                            className="w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm"
+                          />
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-slate-700">显示微信</span>
+                        <button 
+                          onClick={() => setHomeSettings({...homeSettings, showWechat: !homeSettings.showWechat})}
+                          className={cn("w-12 h-6 rounded-full transition-colors relative", homeSettings.showWechat ? "bg-emerald-400" : "bg-slate-200")}
+                        >
+                          <motion.div 
+                            animate={{ x: homeSettings.showWechat ? 24 : 2 }} 
+                            className="w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {settingsPage === 'collections' && (
+                  <motion.div key="collections" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-[15px] font-bold text-slate-800">所有合集</h3>
+                      <div className="flex space-x-2">
+                        <button 
+                          onClick={() => setIsSortingCollections(!isSortingCollections)}
+                          className={cn("text-xs font-medium px-3 py-1.5 rounded-full transition-colors", isSortingCollections ? "bg-lavender-500 text-white" : "bg-slate-100 text-slate-600")}
+                        >
+                          {isSortingCollections ? '完成排序' : '排序'}
+                        </button>
+                        <button 
+                          onClick={() => setShowAddCollectionModal(true)}
+                          className="bg-lavender-50 text-lavender-600 hover:bg-lavender-100 p-1.5 rounded-full transition-colors"
+                        >
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <Reorder.Group axis="y" values={collections} onReorder={setCollections} className="space-y-3">
+                      {collections.map((collection, index) => (
+                        <Reorder.Item 
+                          key={collection.id}
+                          value={collection}
+                          dragListener={isSortingCollections}
+                          className="flex items-center space-x-3 bg-slate-50 rounded-xl p-2 border border-slate-100 cursor-pointer active:scale-[0.98] transition-transform"
+                          onClick={() => {
+                            if (!isSortingCollections) {
+                              setSelectedCollectionForEdit(collection);
+                              setSettingsPage('collection_detail');
+                            }
+                          }}
+                        >
+                          {isSortingCollections && (
+                            <div className="cursor-grab active:cursor-grabbing text-slate-300 p-1 shrink-0">
+                              <GripVertical size={16} />
+                            </div>
+                          )}
+                          <img src={collection.images[0]} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-bold text-slate-700 truncate">{collection.title}</div>
+                            <p className="text-[10px] text-slate-400 mt-0.5">{collection.works?.length || 0} 个作品</p>
+                          </div>
+                          {!isSortingCollections && (
+                            <div className="p-2 text-slate-400 shrink-0">
+                              <ChevronRight size={16} />
+                            </div>
+                          )}
+                        </Reorder.Item>
+                      ))}
+                    </Reorder.Group>
+                  </motion.div>
+                )}
+
+                {settingsPage === 'collection_detail' && selectedCollectionForEdit && (
+                  <motion.div key="collection_detail" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-4">
+                    <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <img src={selectedCollectionForEdit.images[0]} alt="" className="w-12 h-12 rounded-xl object-cover" />
+                          <div>
+                            <h3 className="text-[15px] font-bold text-slate-800">{selectedCollectionForEdit.title}</h3>
+                            <p className="text-xs text-slate-500 mt-0.5">{selectedCollectionForEdit.works?.length || 0} 个作品</p>
+                          </div>
+                        </div>
+                        <button 
+                          onClick={() => setShowCollectionActionSheet(true)}
+                          className="p-2 text-slate-400 hover:bg-slate-50 rounded-full transition-colors"
+                        >
+                          <Settings size={20} />
+                        </button>
+                      </div>
+                      
+                      <div className="pt-2 border-t border-slate-100">
+                        <h4 className="text-sm font-bold text-slate-800 mb-3">包含的作品</h4>
+                        {selectedCollectionForEdit.works?.length > 0 ? (
+                          <div className="space-y-3">
+                            {selectedCollectionForEdit.works.map((workId: number) => {
+                              const work = ALL_SYSTEM_PORTFOLIO.find(w => w.id === workId);
+                              if (!work) return null;
+                              return (
+                                <div 
+                                  key={work.id}
+                                  onClick={() => {
+                                    setSelectedWorkForEdit(work);
+                                    setSettingsPage('work_detail');
+                                  }}
+                                  className="flex items-center space-x-3 bg-slate-50 rounded-xl p-2 border border-slate-100 cursor-pointer active:scale-[0.98] transition-transform"
+                                >
+                                  <img src={work.images[0]} alt="" className="w-12 h-16 rounded-lg object-cover shrink-0" />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-bold text-slate-700 truncate">{work.title}</p>
+                                    <p className="text-[10px] text-slate-400 mt-0.5">{work.images.length} 张照片</p>
+                                  </div>
+                                  <div className="p-2 text-slate-400 shrink-0">
+                                    <ChevronRight size={16} />
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="text-center py-8 text-slate-400 text-sm">
+                            暂无作品，请点击右上角设置添加
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {settingsPage === 'work_detail' && selectedWorkForEdit && (
+                  <motion.div key="work_detail" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-4">
+                    <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-4">
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-xs font-medium text-slate-500 mb-1 block">作品标题</label>
+                          <input 
+                            type="text" 
+                            value={selectedWorkForEdit.title}
+                            onChange={(e) => setSelectedWorkForEdit({...selectedWorkForEdit, title: e.target.value})}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-lavender-500/50 font-bold text-slate-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-slate-500 mb-1 block">分类</label>
+                          <select 
+                            value={selectedWorkForEdit.category}
+                            onChange={(e) => setSelectedWorkForEdit({...selectedWorkForEdit, category: e.target.value})}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-lavender-500/50 text-slate-700"
+                          >
+                            {categories.map(cat => (
+                              <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t border-slate-100">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-bold text-slate-800">照片管理</h4>
+                          <button className="text-xs font-medium text-lavender-600 bg-lavender-50 px-3 py-1.5 rounded-full flex items-center">
+                            <Plus size={14} className="mr-1" /> 添加照片
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          {selectedWorkForEdit.images.map((img: string, idx: number) => (
+                            <div key={idx} className="relative aspect-[3/4] rounded-lg overflow-hidden group">
+                              <img src={img} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                              <button className="absolute top-1 right-1 w-6 h-6 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <X size={12} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {settingsPage === 'portfolio' && (
+                  <motion.div key="portfolio" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-4">
+
+                    {/* Portfolio Items Settings */}
+                    <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-[15px] font-bold text-slate-800 flex items-center">
+                          <ImagePlus size={16} className="mr-2 text-lavender-500" /> 作品管理
+                        </h3>
+                        <div className="flex space-x-2">
+                          <button 
+                            onClick={() => setIsSortingPortfolio(!isSortingPortfolio)}
+                            className={cn("text-xs font-medium px-3 py-1.5 rounded-full transition-colors", isSortingPortfolio ? "bg-lavender-500 text-white" : "bg-slate-100 text-slate-600")}
+                          >
+                            {isSortingPortfolio ? '完成排序' : '排序'}
+                          </button>
+                          <button 
+                            onClick={() => setShowAddPortfolioModal(true)}
+                            className="bg-lavender-50 text-lavender-600 hover:bg-lavender-100 p-1.5 rounded-full transition-colors"
+                          >
+                            <Plus size={16} />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Category Tabs */}
+                      <div className="flex space-x-2 overflow-x-auto thin-scrollbar pb-2">
+                        {displayCategories.map(cat => (
+                          <button
+                            key={cat}
+                            onClick={() => setActiveSettingsCategory(cat)}
+                            className={cn(
+                              "px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors",
+                              activeSettingsCategory === cat 
+                                ? "bg-slate-800 text-white" 
+                                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                            )}
+                          >
+                            {cat}
+                          </button>
+                        ))}
+                      </div>
+                      
+                      {isSortingPortfolio ? (
+                        <Reorder.Group 
+                          axis="y" 
+                          values={portfolio.filter(item => activeSettingsCategory === '全部' || item.category === activeSettingsCategory)} 
+                          onReorder={(newOrder) => {
+                            // Only update the order of the filtered items within the main portfolio array
+                            const newPortfolio = [...portfolio];
+                            let filteredIndex = 0;
+                            for (let i = 0; i < newPortfolio.length; i++) {
+                              if (activeSettingsCategory === '全部' || newPortfolio[i].category === activeSettingsCategory) {
+                                newPortfolio[i] = newOrder[filteredIndex];
+                                filteredIndex++;
+                              }
+                            }
+                            setPortfolio(newPortfolio);
+                          }} 
+                          className="space-y-3"
+                        >
+                          {portfolio.filter(item => activeSettingsCategory === '全部' || item.category === activeSettingsCategory).map((item, index) => (
+                            <Reorder.Item 
+                              key={item.id}
+                              value={item}
+                              className="flex items-center space-x-3 bg-slate-50 rounded-xl p-3 border border-slate-100"
+                            >
+                              <div className="cursor-grab active:cursor-grabbing text-slate-300 p-1 shrink-0">
+                                <GripVertical size={16} />
+                              </div>
+                              <img src={item.images[0]} alt="" className="w-12 h-16 rounded-lg object-cover shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-slate-700 truncate">{item.title}</p>
+                                <p className="text-xs text-slate-400">{item.category}</p>
+                              </div>
+                              <button 
+                                onClick={() => setDeleteConfirmId(item.id)}
+                                className="p-2 text-rose-400 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </Reorder.Item>
+                          ))}
+                        </Reorder.Group>
+                      ) : (
+                        <div className="columns-2 gap-3 space-y-3">
+                          {portfolio.filter(item => activeSettingsCategory === '全部' || item.category === activeSettingsCategory).map((item, index) => (
+                            <div key={item.id} className="relative group break-inside-avoid mb-3">
+                              <div className="rounded-2xl overflow-hidden bg-white shadow-sm border border-slate-100/60">
+                                <div className={cn("w-full relative overflow-hidden", item.height)}>
+                                  <img 
+                                    src={item.images[0]} 
+                                    alt={item.title} 
+                                    className="w-full h-full object-cover"
+                                    referrerPolicy="no-referrer"
+                                  />
+                                  <div className="absolute top-2 right-2 bg-black/30 backdrop-blur-md px-2 py-1 rounded-lg text-[10px] text-white font-medium">
+                                    {item.category}
+                                  </div>
+                                </div>
+                                <div className="p-2.5 space-y-2">
+                                  <input 
+                                    type="text" 
+                                    value={item.title}
+                                    onChange={(e) => {
+                                      const newPort = [...portfolio];
+                                      const idx = newPort.findIndex(p => p.id === item.id);
+                                      if (idx !== -1) {
+                                        newPort[idx] = { ...item, title: e.target.value };
+                                        setPortfolio(newPort);
+                                      }
+                                    }}
+                                    className="w-full bg-transparent border-none focus:outline-none focus:ring-0 text-[13px] font-bold text-slate-800 p-0 truncate"
+                                  />
+                                  <select 
+                                    value={item.category}
+                                    onChange={(e) => {
+                                      const newPort = [...portfolio];
+                                      const idx = newPort.findIndex(p => p.id === item.id);
+                                      if (idx !== -1) {
+                                        newPort[idx] = { ...item, category: e.target.value };
+                                        setPortfolio(newPort);
+                                      }
+                                    }}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-[10px] text-slate-600 focus:outline-none focus:ring-1 focus:ring-lavender-500"
+                                  >
+                                    {categories.map((cat: string) => (
+                                      <option key={cat} value={cat}>{cat}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
+                              <button 
+                                onClick={() => setDeleteConfirmId(item.id)}
+                                className="absolute top-2 left-2 w-7 h-7 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      

@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Workbench } from './pages/Workbench';
 import { Home } from './pages/Home';
 import { Mine } from './pages/Mine';
 import { Login } from './pages/Login';
 
-export default function App() {
+function AppContent() {
   const [userRole, setUserRole] = useState<'creator' | 'user' | null>(null);
   const [creatorType, setCreatorType] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'workbench' | 'home' | 'mine'>('home');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Shared Profile State
   const [profile, setProfile] = useState({
@@ -37,23 +39,45 @@ export default function App() {
   // Shared Categories State
   const [categories, setCategories] = useState(['二次元妆', 'COS妆', '日常妆', '古风妆', '特效妆']);
 
-  if (!userRole) {
-    return (
-      <Login 
-        onLogin={(role, type) => {
-          setUserRole(role);
-          if (type) setCreatorType(type);
-          setActiveTab(role === 'creator' ? 'workbench' : 'home');
-        }} 
-      />
-    );
-  }
+  useEffect(() => {
+    if (!userRole && location.pathname !== '/login') {
+      navigate('/login', { replace: true });
+    }
+  }, [userRole, location.pathname, navigate]);
 
   return (
-    <Layout activeTab={activeTab} setActiveTab={setActiveTab} userRole={userRole}>
-      {activeTab === 'workbench' && userRole === 'creator' && <Workbench categories={categories} setCategories={setCategories} profile={profile} />}
-      {activeTab === 'home' && <Home profile={profile} setProfile={setProfile} homeSettings={homeSettings} setHomeSettings={setHomeSettings} categories={categories} setCategories={setCategories} userRole={userRole} />}
-      {activeTab === 'mine' && <Mine profile={profile} setProfile={setProfile} homeSettings={homeSettings} setHomeSettings={setHomeSettings} userRole={userRole} onBecomeCreator={() => { setUserRole('creator'); setActiveTab('workbench'); }} onLogout={() => setUserRole(null)} />}
-    </Layout>
+    <Routes>
+      <Route path="/login" element={
+        !userRole ? (
+          <Login 
+            onLogin={(role, type) => {
+              setUserRole(role);
+              if (type) setCreatorType(type);
+              navigate(role === 'creator' ? '/workbench' : '/home', { replace: true });
+            }} 
+          />
+        ) : (
+          <Navigate to={userRole === 'creator' ? '/workbench' : '/home'} replace />
+        )
+      } />
+      
+      {!userRole ? (
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      ) : (
+        <Route element={<Layout userRole={userRole} />}>
+          <Route path="/" element={<Navigate to={userRole === 'creator' ? '/workbench' : '/home'} replace />} />
+          {userRole === 'creator' && (
+            <Route path="/workbench/*" element={<Workbench categories={categories} setCategories={setCategories} profile={profile} />} />
+          )}
+          <Route path="/home/*" element={<Home profile={profile} setProfile={setProfile} homeSettings={homeSettings} setHomeSettings={setHomeSettings} categories={categories} setCategories={setCategories} userRole={userRole} />} />
+          <Route path="/mine/*" element={<Mine profile={profile} setProfile={setProfile} homeSettings={homeSettings} setHomeSettings={setHomeSettings} userRole={userRole} onBecomeCreator={() => { setUserRole('creator'); navigate('/workbench', { replace: true }); }} onLogout={() => { setUserRole(null); navigate('/login', { replace: true }); }} />} />
+          <Route path="*" element={<Navigate to={userRole === 'creator' ? '/workbench' : '/home'} replace />} />
+        </Route>
+      )}
+    </Routes>
   );
+}
+
+export default function App() {
+  return <AppContent />;
 }

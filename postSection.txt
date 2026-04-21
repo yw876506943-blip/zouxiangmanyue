@@ -1,0 +1,71 @@
+{/* Image Lightbox */}
+      <AnimatePresence>
+        {selectedPost && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center"
+          >
+            {/* Top Bar */}
+            <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-10 bg-gradient-to-b from-black/60 to-transparent">
+              <div className="text-white font-medium text-sm">
+                {currentImageIndex + 1} / {selectedPost.images.length}
+              </div>
+              <motion.button 
+                className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-md"
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setSelectedPost(null)}
+              >
+                <X size={20} />
+              </motion.button>
+            </div>
+
+            {/* Image Slider */}
+            <div className="w-full h-full flex items-center justify-center relative px-4">
+              <AnimatePresence mode="wait">
+                <motion.img 
+                  key={currentImageIndex}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  src={selectedPost.images[currentImageIndex]} 
+                  className="max-w-full max-h-[80vh] rounded-xl shadow-2xl object-contain"
+                  referrerPolicy="no-referrer"
+                />
+              </AnimatePresence>
+
+              {/* Navigation Controls */}
+              {currentImageIndex > 0 && (
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => prev - 1); }}
+                  className="absolute left-4 w-12 h-12 bg-black/50 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:bg-black/70 transition-colors"
+                >
+                  <ChevronLeft size={24} />
+                </button>
+              )}
+              {currentImageIndex < selectedPost.images.length - 1 && (
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => prev + 1); }}
+                  className="absolute right-4 w-12 h-12 bg-black/50 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:bg-black/70 transition-colors"
+                >
+                  <ChevronRight size={24} />
+                </button>
+              )}
+            </div>
+
+            {/* Bottom Info */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+              <h3 className="text-white text-lg font-bold">{selectedPost.title}</h3>
+              {selectedPost.category && (
+                <span className="inline-block mt-2 px-2.5 py-1 bg-white/20 rounded-md text-xs text-white font-medium backdrop-blur-sm">
+                  {selectedPost.category}
+                </span>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      

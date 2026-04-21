@@ -2,19 +2,23 @@ import React from 'react';
 import { Home, Briefcase, User } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { motion } from 'framer-motion';
+import { useLocation, useNavigate, Outlet } from 'react-router-dom';
 
 interface LayoutProps {
-  children: React.ReactNode;
-  activeTab: 'workbench' | 'home' | 'mine';
-  setActiveTab: (tab: 'workbench' | 'home' | 'mine') => void;
   userRole: 'creator' | 'user';
 }
 
-export function Layout({ children, activeTab, setActiveTab, userRole }: LayoutProps) {
+export function Layout({ userRole }: LayoutProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  const activeTab = location.pathname.startsWith('/workbench') ? 'workbench' :
+                    location.pathname.startsWith('/mine') ? 'mine' : 'home';
+
   return (
     <div className="flex flex-col h-[100dvh] max-w-md mx-auto bg-transparent relative overflow-hidden">
       <main className="flex-1 overflow-y-auto hide-scrollbar pb-24">
-        {children}
+        <Outlet />
       </main>
       
       {/* Bottom Navigation */}
@@ -25,20 +29,20 @@ export function Layout({ children, activeTab, setActiveTab, userRole }: LayoutPr
               icon={<Briefcase size={22} />} 
               label="工作台" 
               isActive={activeTab === 'workbench'} 
-              onClick={() => setActiveTab('workbench')} 
+              onClick={() => navigate('/workbench')} 
             />
           )}
           <NavItem 
             icon={<Home size={22} />} 
             label="首页" 
             isActive={activeTab === 'home'} 
-            onClick={() => setActiveTab('home')} 
+            onClick={() => navigate('/home')} 
           />
           <NavItem 
             icon={<User size={22} />} 
             label="我的" 
             isActive={activeTab === 'mine'} 
-            onClick={() => setActiveTab('mine')} 
+            onClick={() => navigate('/mine')} 
           />
         </div>
       </div>
