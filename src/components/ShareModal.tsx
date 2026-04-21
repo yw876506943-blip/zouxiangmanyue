@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Link, QrCode, MessageCircle, Check, Download } from 'lucide-react';
+import { X, Link, QrCode, MessageCircle, Check, Download, Search } from 'lucide-react';
 
 interface ShareModalProps {
   isOpen: boolean;
   onClose: () => void;
   profile: any;
+  portfolio?: any[];
 }
 
-export function ShareModal({ isOpen, onClose, profile }: ShareModalProps) {
+export function ShareModal({ isOpen, onClose, profile, portfolio = [] }: ShareModalProps) {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showPoster, setShowPoster] = useState(false);
 
@@ -105,52 +106,117 @@ export function ShareModal({ isOpen, onClose, profile }: ShareModalProps) {
             className="fixed inset-0 z-[70] bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center p-6"
             onClick={() => setShowPoster(false)}
           >
-            <motion.div 
+             <motion.div 
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               onClick={e => e.stopPropagation()}
-              className="w-full max-w-sm bg-white rounded-3xl overflow-hidden shadow-2xl relative"
+              className="w-full max-w-[340px] relative pb-16"
             >
-              {/* Poster Content */}
-              <div className="h-32 bg-gradient-to-br from-lavender-200 to-misty-200 relative">
-                <div className="absolute -bottom-10 left-6">
-                  <img 
-                    src={profile?.avatar || "https://picsum.photos/seed/avatar/150/150"} 
-                    alt="Avatar" 
-                    className="w-20 h-20 rounded-full border-4 border-white shadow-sm object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-              </div>
-              <div className="pt-12 pb-6 px-6">
-                <h3 className="text-xl font-bold text-slate-800 mb-1">{profile?.name || '我的主页'}</h3>
-                <p className="text-sm text-slate-500 mb-4">{profile?.bio || '承接各类妆造，欢迎预约~'}</p>
-                
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {profile?.tags?.slice(0, 3).map((tag: string, index: number) => (
-                    <span key={index} className="px-2 py-1 bg-slate-50 text-slate-500 text-xs rounded-md">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+              <div 
+                className="w-full bg-[#ffeaef] relative border-[3px] border-[#1c1c2e] overflow-hidden rounded-[2rem] shadow-[4px_4px_0px_#1c1c2e]"
+              >
+                {/* Background stars */}
+                <div className="absolute top-4 left-4 text-yellow-400 text-xl">✨</div>
+                <div className="absolute top-12 right-6 text-yellow-400 text-2xl">✨</div>
+                <div className="absolute top-1/2 left-2 text-yellow-400 text-lg">✨</div>
+                <div className="absolute bottom-16 right-4 text-yellow-400 text-xl">✨</div>
 
-                <div className="flex items-center justify-between p-4 bg-lavender-50 rounded-2xl border border-lavender-100/50">
-                  <div>
-                    <p className="text-sm font-bold text-slate-800 mb-1">长按识别小程序码</p>
-                    <p className="text-xs text-slate-500">查看我的完整作品与档期</p>
+                <div className="pt-6 pb-4 px-4 flex flex-col items-center">
+                  
+                  {/* Top Header */}
+                  <div className="w-full text-center mb-4">
+                    <h2 
+                      className="text-white font-black text-xl italic tracking-widest mb-1"
+                      style={{ WebkitTextStroke: '1.5px #1c1c2e', textShadow: '2px 2px 0px #1c1c2e' }}
+                    >
+                      遇见你的专属二次元创作者！
+                    </h2>
+                    <div className="inline-flex items-center space-x-2 bg-white/60 rounded-full py-1.5 px-4 border-[2px] border-[#1c1c2e]">
+                      <div className="w-6 h-6 bg-cyan-100 rounded-full border border-[#1c1c2e] flex items-center justify-center text-xs">🐘</div>
+                      <span 
+                        className="font-black text-white italic tracking-wider text-[17px]"
+                        style={{ WebkitTextStroke: '1px #1c1c2e', textShadow: '2px 2px 0px #1c1c2e' }}
+                      >
+                        小程序：走象漫约
+                      </span>
+                    </div>
                   </div>
-                  <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center text-lavender-500 shadow-sm shrink-0">
-                    <QrCode size={32} />
+
+                  {/* Step 1 */}
+                  <div className="w-full mb-3">
+                    <div className="inline-flex items-center space-x-1.5 bg-[#7dd3fc] border-[2px] border-[#1c1c2e] rounded-full px-3 py-1 mb-2">
+                       <span className="font-bold text-[#1c1c2e] text-[13px] flex items-center tracking-wide">1. <Search size={14} className="mx-1 stroke-[3]" /> 微信搜索：走象漫约</span>
+                    </div>
+                    <div className="bg-[#a5f3fc] border-[2px] border-[#1c1c2e] rounded-[1.25rem] p-4 flex justify-center h-28 relative overflow-hidden">
+                       <div className="w-48 h-32 bg-[#e0e7ff] border-[2px] border-[#1c1c2e] rounded-t-[1.5rem] mt-2 relative overflow-hidden flex flex-col pt-3 px-3 shadow-inner">
+                         <div className="w-full bg-white border-[2px] border-[#1c1c2e] rounded-full py-1 px-3 flex items-center shadow-sm">
+                           <Search size={14} className="text-slate-400 mr-2" />
+                           <span className="text-[13px] font-bold text-slate-800">走象漫约</span>
+                         </div>
+                       </div>
+                    </div>
+                  </div>
+
+                  {/* Step 2 */}
+                  <div className="w-full mb-3">
+                    <div className="inline-flex items-center space-x-1.5 bg-[#7dd3fc] border-[2px] border-[#1c1c2e] rounded-full px-3 py-1 mb-2">
+                       <span className="font-bold text-[#1c1c2e] text-[13px] flex items-center tracking-wide">2. <Search size={14} className="mx-1 stroke-[3]" /> 首页搜索【{profile?.name}】</span>
+                    </div>
+                    
+                    {/* Profile Card */}
+                    <div className="bg-white border-[2px] border-[#1c1c2e] rounded-2xl p-3 shadow-sm">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <img 
+                          src={profile?.avatar || "https://picsum.photos/seed/avatar/150/150"} 
+                          className="w-12 h-12 rounded-full border-[2px] border-[#1c1c2e] object-cover shrink-0 bg-slate-100" 
+                          referrerPolicy="no-referrer"
+                        />
+                        <div>
+                          <h3 className="font-bold text-base text-slate-800 leading-tight mb-1">{profile?.name}</h3>
+                          <p className="text-[11px] text-slate-600 font-medium">技巧化妆师</p> 
+                        </div>
+                      </div>
+                      
+                      <p className="text-[12px] text-slate-700 leading-snug mb-3">
+                        {profile?.bio || '擅长Lolita、古风、COSPLAY妆面，用心塑造每一个角色。'}
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        {(profile?.tags || ['妆娘', 'COSPLAY', 'Lolita', '古风']).slice(0, 4).map((tag: string, idx: number) => (
+                           <span key={idx} className={`px-2 py-0.5 rounded-full text-white text-[11px] font-bold border border-[#1c1c2e] shadow-sm ${['bg-[#fbb6ce]', 'bg-[#5eead4]', 'bg-[#ffb3c6]', 'bg-[#c7d2fe]'][idx % 4]}`}>
+                             {tag}
+                           </span>
+                        ))}
+                      </div>
+                      
+                      <div className="grid grid-cols-3 gap-1.5">
+                        {(portfolio?.length ? portfolio : [
+                           {images: ['https://picsum.photos/seed/1/300/400']},
+                           {images: ['https://picsum.photos/seed/2/300/400']},
+                           {images: ['https://picsum.photos/seed/3/300/400']}
+                        ]).slice(0, 3).map((work, idx) => (
+                          <div key={idx} className="aspect-[3/4] relative rounded-lg border border-[#1c1c2e] overflow-hidden bg-slate-100">
+                             <img src={work.images?.[0] || 'https://picsum.photos/300'} className="absolute inset-0 w-full h-full object-cover" referrerPolicy="no-referrer" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer Bar */}
+                  <div className="w-full bg-white border-[3px] border-[#1c1c2e] rounded-full py-2.5 flex items-center justify-center relative mt-3 shadow-[2px_2px_0px_#1c1c2e]">
+                    <span className="font-black text-slate-800 text-[14px] tracking-widest pl-2">微信小程序搜索：走象漫约</span>
+                    <div className="absolute right-2 w-8 h-8 rounded-full border border-slate-200 bg-cyan-50 shadow-sm flex items-center justify-center text-xs">🐘</div>
                   </div>
                 </div>
               </div>
               
-              {/* Save Button Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white to-transparent pt-12">
+              {/* Save Button */}
+              <div className="absolute bottom-0 left-0 right-0 flex justify-center">
                 <button 
                   onClick={handleSavePoster}
-                  className="w-full h-12 bg-slate-800 text-white rounded-xl font-bold text-[15px] active:scale-95 transition-transform shadow-lg shadow-slate-800/20 flex items-center justify-center space-x-2"
+                  className="w-full max-w-[240px] h-12 bg-slate-800 text-white rounded-full font-bold text-[15px] active:scale-95 transition-transform flex items-center justify-center space-x-2 border-2 border-white/20 shadow-xl"
                 >
                   <Download size={18} />
                   <span>保存海报到相册</span>

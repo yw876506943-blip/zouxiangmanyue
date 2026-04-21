@@ -9,7 +9,7 @@ export function MineEditProfile({ profile, setProfile, userRole, showToast, onLo
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const navigate = useNavigate();
   
-  const onBack = () => navigate('/mine');
+  const onBack = () => navigate(-1);
 
   return (
     <motion.div 

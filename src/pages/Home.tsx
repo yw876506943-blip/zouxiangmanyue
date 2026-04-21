@@ -3,12 +3,11 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { HomeSettings } from './HomeSettings';
 import { HomeCollectionDetail } from './HomeCollectionDetail';
 import { HomePostDetail } from './HomePostDetail';
-import { Heart, Phone, Share, MapPin, Star, MessageCircle, ChevronLeft, ChevronRight, X, Settings, Plus, Trash2, GripVertical, Layers, User, FolderHeart, ImagePlus, Camera } from 'lucide-react';
+import { Heart, Phone, Share, MapPin, Star, MessageCircle, ChevronLeft, ChevronRight, X, Settings, Plus, Trash2, GripVertical, Layers, User, FolderHeart, ImagePlus, Camera, Search } from 'lucide-react';
 import { Button } from '@/src/components/ui/Button';
 import { cn } from '@/src/lib/utils';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 
-import { EditProfile } from '@/src/components/EditProfile';
 import { ShareModal } from '@/src/components/ShareModal';
 
 const CATEGORIES = ['全部', '二次元妆', 'COS妆', '日常妆', '古风妆', '特效妆'];
@@ -68,6 +67,30 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
   const [showShareModal, setShowShareModal] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [searchInput, setSearchInput] = useState('');
+  const [activeSearch, setActiveSearch] = useState('');
+  
+  // New user hasn't followed anyone
+  const followedCreators: any[] = [];
+  
+  const ALL_CREATORS = [
+    { id: 1, name: '小樱', avatar: 'https://picsum.photos/seed/1/100/100', bio: '擅长各类二次元COS妆造，可接特化与日常。', works: ['https://picsum.photos/seed/w1/200/200', 'https://picsum.photos/seed/w2/200/200', 'https://picsum.photos/seed/w3/200/200'] },
+    { id: 2, name: 'Kiko', avatar: 'https://picsum.photos/seed/2/100/100', bio: '常驻广州，主拍漫展场照、正片，擅长情绪光影。', works: ['https://picsum.photos/seed/w4/200/200', 'https://picsum.photos/seed/w5/200/200', 'https://picsum.photos/seed/w6/200/200'] },
+    { id: 3, name: '苍云', avatar: 'https://picsum.photos/seed/avatar/150/150', bio: '技巧化妆师，擅长Lolita、古风、COSPLAY妆面。', works: ['https://picsum.photos/seed/1/300/400', 'https://picsum.photos/seed/2/300/400', 'https://picsum.photos/seed/3/300/400'] }
+  ];
+
+  const displayCreators = activeSearch.trim()
+    ? ALL_CREATORS.filter(c => c.name.toLowerCase().includes(activeSearch.toLowerCase()))
+    : followedCreators;
+
+  const handleSearch = () => {
+    setActiveSearch(searchInput);
+  };
+
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setActiveSearch('');
+  };
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -85,67 +108,108 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
     item => activeCategory === '全部' || item.category === activeCategory
   );
 
-  if (userRole === 'user') {
-    const followedCreators = [
-      { 
-        id: 1, 
-        name: '小樱', 
-        avatar: 'https://picsum.photos/seed/1/100/100', 
-        bio: '擅长各类二次元COS妆造，可接特化与日常。',
-        works: [
-          'https://picsum.photos/seed/w1/200/200',
-          'https://picsum.photos/seed/w2/200/200',
-          'https://picsum.photos/seed/w3/200/200'
-        ]
-      },
-      { 
-        id: 2, 
-        name: 'Kiko', 
-        avatar: 'https://picsum.photos/seed/2/100/100', 
-        bio: '常驻广州，主拍漫展场照、正片，擅长情绪光影。',
-        works: [
-          'https://picsum.photos/seed/w4/200/200',
-          'https://picsum.photos/seed/w5/200/200',
-          'https://picsum.photos/seed/w6/200/200'
-        ]
-      },
-    ];
-    return (
-      <div className="p-4 space-y-4 pb-24 min-h-screen bg-[#f8fafc]">
-        <h1 className="text-2xl font-bold text-slate-800 pt-2 px-2">我关注的创作者</h1>
+  const userSearchContent = (
+    <div className="p-4 space-y-4 pb-24 min-h-screen bg-[#f8fafc]">
+      {/* Search Bar */}
+      <div className="relative pt-2">
+        <div className="flex items-center bg-white rounded-full pl-4 pr-1.5 py-1.5 shadow-sm border border-slate-100 focus-within:border-cyan-200 focus-within:ring-2 focus-within:ring-cyan-50 transition-all">
+          <Search size={18} className="text-slate-400 mr-2 shrink-0" />
+          <input 
+            type="text" 
+            placeholder="搜索创作者名称..." 
+            value={searchInput}
+            onChange={e => setSearchInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSearch()}
+            className="flex-1 bg-transparent py-1 outline-none text-sm text-slate-800 placeholder:text-slate-400"
+          />
+          {searchInput && (
+            <button onClick={handleClearSearch} className="px-2 text-slate-400 hover:text-slate-600 shrink-0">
+              <X size={16} />
+            </button>
+          )}
+          <button 
+            onClick={handleSearch}
+            className="ml-1 px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-[13px] font-bold rounded-full transition-colors shrink-0 shadow-sm"
+          >
+            搜索
+          </button>
+        </div>
+      </div>
+
+      <h1 className="text-xl font-bold text-slate-800 px-2 mt-4">
+        {activeSearch.trim() ? `搜索结果 (${displayCreators.length})` : '我关注的创作者'}
+      </h1>
+      
+      {displayCreators.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 px-4">
+           {activeSearch.trim() ? (
+             <div className="flex flex-col items-center text-center bg-white/60 p-8 rounded-[36px] border-[3px] border-dashed border-slate-200">
+               <div className="w-20 h-20 bg-slate-100 rounded-[28px] rotate-3 flex items-center justify-center mb-5 border-[3px] border-slate-300">
+                 <Search size={32} className="text-slate-400" />
+               </div>
+               <p className="text-[16px] font-extrabold text-slate-700 tracking-tight">呜呜，没搜到相关的老师呢</p>
+               <p className="text-[13px] text-slate-400 mt-2">( ；′⌒` ) 换个关键词试试看吧？</p>
+             </div>
+           ) : (
+             <div className="flex flex-col items-center text-center relative w-full">
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-50/50 rounded-full blur-[40px] -z-10" />
+               
+               <div className="w-32 h-32 relative mb-6">
+                 <div className="absolute inset-0 bg-white rounded-[32px] rotate-6 border-[3px] border-slate-200 shadow-sm transition-transform hover:rotate-12 duration-300" />
+                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-[32px] -rotate-3 border-[3px] border-cyan-100 flex items-center justify-center shadow-sm">
+                   <FolderHeart size={48} className="text-cyan-400" />
+                 </div>
+                 {/* Sparkles */}
+                 <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-100 border-[2px] border-yellow-300 rounded-full flex items-center justify-center text-[10px]">✨</div>
+               </div>
+
+               <p className="text-[18px] font-extrabold text-slate-800 tracking-tight mb-2">关注列表空空如也</p>
+               <p className="text-[13px] text-slate-500 font-medium max-w-[200px] leading-relaxed">
+                 这里是您的专属“打call”阵地<br/>
+                 快去发现宝藏创作者吧！ ( •̀ ω •́ )✧
+               </p>
+               
+               <button 
+                 onClick={() => {
+                   document.querySelector('input')?.focus();
+                 }}
+                 className="mt-6 px-6 py-2.5 bg-gradient-to-r from-cyan-400 to-blue-400 text-white rounded-full font-bold shadow-[0_4px_12px_rgba(34,211,238,0.3)] hover:scale-105 active:scale-95 transition-all text-sm flex items-center space-x-1.5"
+               >
+                 <Search size={16} />
+                 <span>去搜搜看</span>
+               </button>
+             </div>
+           )}
+        </div>
+      ) : (
         <div className="space-y-4">
-          {followedCreators.map(creator => (
+          {displayCreators.map(creator => (
             <div key={creator.id} className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex flex-col space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <img src={creator.avatar} className="w-10 h-10 rounded-full object-cover border border-slate-100" />
+                  <img src={creator.avatar} className="w-10 h-10 rounded-full object-cover border border-slate-100" referrerPolicy="no-referrer" />
                   <div>
                     <h3 className="font-bold text-slate-800 text-sm">{creator.name}</h3>
                     <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">{creator.bio}</p>
                   </div>
                 </div>
-                <button className="px-4 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-bold rounded-full transition-colors shrink-0">
+                <button onClick={() => navigate(`/home/creator/${creator.id}`)} className="px-4 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-bold rounded-full transition-colors shrink-0">
                   进入主页
                 </button>
               </div>
               <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-hide">
-                {creator.works.map((work, idx) => (
-                  <img key={idx} src={work} className="w-24 h-24 rounded-2xl object-cover shrink-0 border border-slate-50" />
+                {creator.works.map((work: string, idx: number) => (
+                  <img key={idx} src={work} className="w-24 h-24 rounded-2xl object-cover shrink-0 border border-slate-50" referrerPolicy="no-referrer" />
                 ))}
               </div>
             </div>
           ))}
         </div>
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 
-  return (
-    <Routes>
-      <Route path="/settings/*" element={<HomeSettings profile={profile} setProfile={setProfile} homeSettings={homeSettings} setHomeSettings={setHomeSettings} collections={collections} setCollections={setCollections} portfolio={portfolio} setPortfolio={setPortfolio} categories={categories} setCategories={setCategories} ALL_SYSTEM_PORTFOLIO={ALL_SYSTEM_PORTFOLIO} />} />
-      <Route path="/collection/:id" element={<HomeCollectionDetail collections={collections} allPortfolio={ALL_SYSTEM_PORTFOLIO} profile={profile} />} />
-      <Route path="/post/:id" element={<HomePostDetail posts={[...portfolio, ...ALL_SYSTEM_PORTFOLIO]} />} />
-      <Route path="/" element={
+  const creatorHomeContent = (
     <div className="pb-24 bg-[#f8fafc] min-h-screen">
       {/* Cover Image */}
       <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-lavender-200 to-misty-100 z-0 overflow-hidden">
@@ -169,13 +233,23 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
         className="relative z-10 pt-20 px-4"
       >
         <div className="absolute top-4 left-4 flex space-x-2">
-          <motion.button 
-            whileTap={{ scale: 0.9 }} 
-            onClick={() => navigate('/home/settings')}
-            className="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md flex items-center justify-center text-slate-700 shadow-sm"
-          >
-            <Settings size={16} />
-          </motion.button>
+          {location.pathname.includes('/creator/') ? (
+            <motion.button 
+              whileTap={{ scale: 0.9 }} 
+              onClick={() => navigate(-1)}
+              className="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md flex items-center justify-center text-slate-700 shadow-sm"
+            >
+              <ChevronLeft size={20} className="-ml-0.5" />
+            </motion.button>
+          ) : (
+            <motion.button 
+              whileTap={{ scale: 0.9 }} 
+              onClick={() => navigate('/home/settings')}
+              className="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md flex items-center justify-center text-slate-700 shadow-sm"
+            >
+              <Settings size={16} />
+            </motion.button>
+          )}
         </div>
         <div className="absolute top-4 right-4 flex space-x-2 z-20">
           <motion.button 
@@ -388,6 +462,7 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
         isOpen={showShareModal} 
         onClose={() => setShowShareModal(false)} 
         profile={profile} 
+        portfolio={portfolio}
       />
 
       {/* Toast */}
@@ -406,8 +481,15 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
 
       
     </div>
-        }
-      />
+  );
+
+  return (
+    <Routes>
+      <Route path="/settings/*" element={<HomeSettings profile={profile} setProfile={setProfile} homeSettings={homeSettings} setHomeSettings={setHomeSettings} collections={collections} setCollections={setCollections} portfolio={portfolio} setPortfolio={setPortfolio} categories={categories} setCategories={setCategories} ALL_SYSTEM_PORTFOLIO={ALL_SYSTEM_PORTFOLIO} showToast={showToast} userRole={userRole} />} />
+      <Route path="/collection/:id" element={<HomeCollectionDetail collections={collections} allPortfolio={ALL_SYSTEM_PORTFOLIO} profile={profile} />} />
+      <Route path="/post/:id" element={<HomePostDetail posts={[...portfolio, ...ALL_SYSTEM_PORTFOLIO]} />} />
+      <Route path="/creator/:id" element={creatorHomeContent} />
+      <Route path="/" element={userRole === 'user' ? userSearchContent : creatorHomeContent} />
     </Routes>
   );
 }

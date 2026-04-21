@@ -4,7 +4,7 @@ import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { ChevronLeft, ChevronRight, User, Settings as SettingsIcon, FolderHeart, Layers, Plus, Trash2, GripVertical, ImagePlus } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { Button } from '@/src/components/ui/Button';
-import { EditProfile } from '@/src/components/EditProfile';
+import { MineEditProfile } from './MineEditProfile';
 
 export function HomeSettings({ 
   profile, setProfile, 
@@ -12,7 +12,9 @@ export function HomeSettings({
   collections, setCollections, 
   portfolio, setPortfolio, 
   categories, setCategories,
-  ALL_SYSTEM_PORTFOLIO
+  ALL_SYSTEM_PORTFOLIO,
+  showToast,
+  userRole
 }: any) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -85,9 +87,7 @@ export function HomeSettings({
             } />
 
             <Route path="profile" element={
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-                <EditProfile profile={profile} setProfile={setProfile} />
-              </motion.div>
+              <MineEditProfile profile={profile} setProfile={setProfile} showToast={showToast} userRole={userRole} />
             } />
 
             <Route path="display" element={
