@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SubPageLayout } from '@/src/components/SubPageLayout';
-import { Plus, GripVertical, Tag, Trash2, AlertCircle } from 'lucide-react';
+import { Plus, GripVertical, Tag, Trash2, AlertCircle } from '@/src/lib/icons';
 import { cn } from '@/src/lib/utils';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { createPortal } from 'react-dom';

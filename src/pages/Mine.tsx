@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Settings, DollarSign, MessageSquare, Info, ChevronRight, Edit3, Camera, ChevronLeft, LayoutTemplate, X, Check, Plus, Clock, Lock, Briefcase, User, Phone, Headphones } from 'lucide-react';
+import { Settings, DollarSign, MessageSquare, Info, ChevronRight, Edit3, Camera, ChevronLeft, LayoutTemplate, X, Check, Plus, Clock, Lock, Briefcase, User, Phone, Headphones } from '@/src/lib/icons';
 import { cn } from '@/src/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Routes, Route, useNavigate } from 'react-router-dom';

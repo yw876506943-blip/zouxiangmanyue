@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Briefcase, Phone, Sparkles } from 'lucide-react';
+import { User, Briefcase, Phone, Sparkles } from '@/src/lib/icons';
 import { motion } from 'framer-motion';
 
 const CREATOR_TYPES = ['妆娘', '毛娘', '摄影', '后期', '画师', '手作', '道具师', '服装师'];

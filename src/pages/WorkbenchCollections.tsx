@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SubPageLayout } from '@/src/components/SubPageLayout';
-import { Search, Plus, FolderHeart, Layers, MoreVertical, AlertCircle, List, ImagePlus, Trash2, X, Check, Eye } from 'lucide-react';
+import { Search, Plus, FolderHeart, Layers, MoreVertical, AlertCircle, List, ImagePlus, Trash2, X, Check, Eye } from '@/src/lib/icons';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { cn } from '@/src/lib/utils';
@@ -231,7 +231,7 @@ function CollectionDetailPage({ collection, onBack, onEdit, onUpdate }: { collec
                 <span>浏览 0</span>
               </div>
             </div>
-            <button onClick={onEdit} className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors">
+            <button onClick={onEdit} className="absolute top-2 right-2 p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors z-10">
               <MoreVertical size={18} />
             </button>
           </div>
@@ -497,21 +497,18 @@ export function CollectionsPage() {
         )}
       </div>
       
-      <AnimatePresence>
-        {activeItem && (
-          <ActionSheet 
-            item={activeItem} 
-            onClose={() => setActiveItem(null)} 
-            onUpdate={handleUpdate} 
-            onDelete={(id: string) => setDeleteConfirmCol(id)} 
-            onEdit={(item: any) => {
-              setSelectedCollection(item);
-              setView('edit');
-              setActiveItem(null);
-            }}
-          />
-        )}
-      </AnimatePresence>
+      <ActionSheet 
+        isOpen={!!activeItem}
+        item={activeItem || {}} 
+        onClose={() => setActiveItem(null)} 
+        onUpdate={handleUpdate} 
+        onDelete={(id: string) => setDeleteConfirmCol(id)} 
+        onEdit={(item: any) => {
+          setSelectedCollection(item);
+          setView('edit');
+          setActiveItem(null);
+        }}
+      />
 
       {/* Delete Confirmation Dialog */}
       {createPortal(

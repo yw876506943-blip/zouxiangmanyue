@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
-import { ChevronLeft, ChevronRight, User, Settings as SettingsIcon, FolderHeart, Layers, Plus, Trash2, GripVertical, ImagePlus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, User, Settings as SettingsIcon, FolderHeart, Layers, Plus, Trash2, GripVertical, ImagePlus } from '@/src/lib/icons';
 import { cn } from '@/src/lib/utils';
 import { Button } from '@/src/components/ui/Button';
 import { MineEditProfile } from './MineEditProfile';
@@ -49,7 +49,7 @@ export function HomeSettings({
         className="fixed inset-0 z-50 bg-[#f8fafc] flex flex-col"
       >
         {/* Header */}
-        <div className="bg-white/80 backdrop-blur-md px-4 py-3 flex items-center justify-between shrink-0 border-b border-slate-100">
+        <div className="bg-white/80 backdrop-blur-md px-4 pt-12 pb-3 flex items-center justify-between shrink-0 border-b border-slate-100">
           <button 
             onClick={handleBack} 
             className="p-2 -ml-2 text-slate-600 active:scale-95 transition-transform"

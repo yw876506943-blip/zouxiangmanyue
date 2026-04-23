@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SubPageLayout } from '@/src/components/SubPageLayout';
 import { AddMediaForm, ActionSheet } from '@/src/components/WorkbenchShared';
-import { Search, Plus, ImageIcon, MoreVertical, Lock, Link2, Eye, Trash2 } from 'lucide-react';
+import { Search, Plus, ImageIcon, MoreVertical, Lock, Link2, Eye, Trash2 } from '@/src/lib/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { cn } from '@/src/lib/utils';
@@ -156,21 +156,18 @@ export function PortfolioPage({ items, setItems, onBack }: { items: any[], setIt
         </div>
       )}
       
-      <AnimatePresence>
-        {activeItem && (
-          <ActionSheet 
-            item={activeItem} 
-            onClose={() => setActiveItem(null)} 
-            onUpdate={handleUpdate} 
-            onDelete={(id: string) => setDeleteConfirmId(id)} 
-            onEdit={(item: any) => {
-              setEditingItem(item);
-              setView('edit');
-              setActiveItem(null);
-            }}
-          />
-        )}
-      </AnimatePresence>
+      <ActionSheet 
+        isOpen={!!activeItem}
+        item={activeItem || {}} 
+        onClose={() => setActiveItem(null)} 
+        onUpdate={handleUpdate} 
+        onDelete={(id: string) => setDeleteConfirmId(id)} 
+        onEdit={(item: any) => {
+          setEditingItem(item);
+          setView('edit');
+          setActiveItem(null);
+        }}
+      />
 
       {createPortal(
         <AnimatePresence>

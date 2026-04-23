@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Link, QrCode, MessageCircle, Check, Download, Search } from 'lucide-react';
+import { X, Link, QrCode, MessageCircle, Check, Download, Search } from '@/src/lib/icons';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -226,7 +226,7 @@ export function ShareModal({ isOpen, onClose, profile, portfolio = [] }: ShareMo
             
             <button 
               onClick={() => setShowPoster(false)}
-              className="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white"
+              className="absolute top-6 left-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white"
             >
               <X size={20} />
             </button>

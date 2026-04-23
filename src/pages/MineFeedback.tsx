@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ChevronLeft, X, Plus, Clock } from 'lucide-react';
+import { ChevronLeft, X, Plus, Clock } from '@/src/lib/icons';
 import { cn } from '@/src/lib/utils';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +40,7 @@ export function MineFeedback({ showToast }: any) {
       className="fixed inset-0 z-50 bg-[#f4f5f7] overflow-y-auto pb-24 flex flex-col"
     >
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-10 bg-white px-4 pt-12 pb-3 flex items-center justify-between">
         <button onClick={onBack} className="p-2 -ml-2 text-slate-800">
           <ChevronLeft size={24} />
         </button>

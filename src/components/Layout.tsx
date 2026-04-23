@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Briefcase, User } from 'lucide-react';
+import { Home, Briefcase, User } from '@/src/lib/icons';
 import { cn } from '@/src/lib/utils';
 import { motion } from 'framer-motion';
 import { useLocation, useNavigate, Outlet } from 'react-router-dom';
@@ -16,8 +16,8 @@ export function Layout({ userRole }: LayoutProps) {
                     location.pathname.startsWith('/mine') ? 'mine' : 'home';
 
   return (
-    <div className="flex flex-col h-[100dvh] max-w-md mx-auto bg-transparent relative overflow-hidden">
-      <main className="flex-1 overflow-y-auto hide-scrollbar pb-24">
+    <div className="flex flex-col min-h-[100dvh] max-w-md mx-auto bg-transparent relative">
+      <main className="flex-1 pb-24">
         <Outlet />
       </main>
       

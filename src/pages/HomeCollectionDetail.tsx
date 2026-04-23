@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, Layers, Heart, FolderHeart } from 'lucide-react';
+import { ChevronLeft, Layers, Heart, FolderHeart } from '@/src/lib/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { cn } from '@/src/lib/utils';
 
@@ -35,7 +35,7 @@ export function HomeCollectionDetail({ collections, allPortfolio, profile }: { c
           className="fixed inset-0 z-[80] bg-slate-50 flex flex-col"
         >
           {/* Header */}
-          <div className="bg-white/80 backdrop-blur-md px-4 py-3 flex items-center justify-between shrink-0 border-b border-slate-100 sticky top-0 z-10">
+          <div className="bg-white/80 backdrop-blur-md px-4 pt-12 pb-3 flex items-center justify-between shrink-0 border-b border-slate-100 sticky top-0 z-10">
             <button 
               onClick={handleBack} 
               className="p-2 -ml-2 text-slate-600 active:scale-95 transition-transform"

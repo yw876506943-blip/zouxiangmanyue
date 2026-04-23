@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from '@/src/lib/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EditProfile } from '@/src/components/EditProfile';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ export function MineEditProfile({ profile, setProfile, userRole, showToast, onLo
       className="fixed inset-0 z-50 bg-[#f8fafc] overflow-y-auto pb-24"
     >
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 pt-12 pb-3 flex items-center justify-between">
         <button onClick={onBack} className="p-2 -ml-2 text-slate-600">
           <ChevronLeft size={24} />
         </button>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, CalendarDays, Calendar as CalendarIcon, MapPin, MessageSquare, X, AlertCircle } from 'lucide-react';
+import { ChevronLeft, CalendarDays, Calendar as CalendarIcon, MapPin, MessageSquare, X, AlertCircle } from '@/src/lib/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/src/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -61,7 +61,7 @@ export function ConventionsPage({ conventions, setConventions }: any) {
   return (
     <div className="fixed inset-0 z-50 bg-[#f8fafc] overflow-hidden flex flex-col">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 py-3 flex items-center justify-between shrink-0 z-10 relative">
+      <div className="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 pt-12 pb-3 flex items-center justify-between shrink-0 z-10 relative">
         <div className="flex items-center space-x-2 z-10">
           <button onClick={onBack} className="p-2 -ml-2 text-slate-600 active:scale-95 transition-transform">
             <ChevronLeft size={24} />
@@ -105,12 +105,12 @@ export function ConventionsPage({ conventions, setConventions }: any) {
                 )}
               >
                 {!isPast && (
-                  <div className="absolute top-0 right-0 bg-lavender-50 text-lavender-600 text-[10px] font-bold px-3 py-1 rounded-bl-xl border-b border-l border-lavender-100">
+                  <div className="absolute top-0 left-0 bg-lavender-50 text-lavender-600 text-[10px] font-bold px-3 py-1 rounded-br-xl border-b border-r border-lavender-100">
                     {daysUntil === 0 ? '今天开始' : `距开始还有 ${daysUntil} 天`}
                   </div>
                 )}
                 
-                <div className="flex justify-between items-start mb-3 pr-20">
+                <div className="flex justify-between items-start mb-3 pt-6">
                   <h3 className="text-[16px] font-bold text-slate-800">{conv.name}</h3>
                 </div>
                 

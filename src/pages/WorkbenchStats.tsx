@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SubPageLayout } from '@/src/components/SubPageLayout';
-import { Calendar as CalendarIcon, Layers, Wallet, CheckCircle2 } from 'lucide-react';
+import { Calendar as CalendarIcon, Layers, Wallet, CheckCircle2 } from '@/src/lib/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, isSameWeek, isSameMonth, startOfMonth, endOfMonth, isWithinInterval, startOfDay, endOfDay, parseISO } from 'date-fns';
 import { cn } from '@/src/lib/utils';

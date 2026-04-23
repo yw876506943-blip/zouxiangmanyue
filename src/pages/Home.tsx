@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { HomeSettings } from './HomeSettings';
 import { HomeCollectionDetail } from './HomeCollectionDetail';
 import { HomePostDetail } from './HomePostDetail';
-import { Heart, Phone, Share, MapPin, Star, MessageCircle, ChevronLeft, ChevronRight, X, Settings, Plus, Trash2, GripVertical, Layers, User, FolderHeart, ImagePlus, Camera, Search } from 'lucide-react';
+import { Heart, Phone, Share, MapPin, Star, MessageCircle, ChevronLeft, ChevronRight, X, Settings, Plus, Trash2, GripVertical, Layers, User, FolderHeart, ImagePlus, Camera, Search } from '@/src/lib/icons';
 import { Button } from '@/src/components/ui/Button';
 import { cn } from '@/src/lib/utils';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
@@ -50,6 +50,7 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
   const [activeSettingsCategory, setActiveSettingsCategory] = useState('全部');
   const [isFollowing, setIsFollowing] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchScrolled, setSearchScrolled] = useState(false);
   
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -99,7 +100,10 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
 
   // Handle scroll for sticky header shadow
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 100);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 100);
+      setSearchScrolled(window.scrollY > 10);
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -110,8 +114,11 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
 
   const userSearchContent = (
     <div className="p-4 space-y-4 pb-24 min-h-screen bg-[#f8fafc]">
-      {/* Search Bar */}
-      <div className="relative pt-2">
+      {/* Search Bar Wrapper with Sticky positioning */}
+      <div className={cn(
+        "sticky top-0 z-50 pt-12 pb-3 -mx-4 px-4 transition-all duration-300",
+        searchScrolled ? "bg-white/80 backdrop-blur-xl shadow-sm border-b border-slate-100" : "bg-[#f8fafc]"
+      )}>
         <div className="flex items-center bg-white rounded-full pl-4 pr-1.5 py-1.5 shadow-sm border border-slate-100 focus-within:border-cyan-200 focus-within:ring-2 focus-within:ring-cyan-50 transition-all">
           <Search size={18} className="text-slate-400 mr-2 shrink-0" />
           <input 
@@ -232,7 +239,7 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
         animate={{ opacity: 1, y: 0 }}
         className="relative z-10 pt-20 px-4"
       >
-        <div className="absolute top-4 left-4 flex space-x-2">
+        <div className="absolute top-12 left-4 flex space-x-2 z-20">
           {location.pathname.includes('/creator/') ? (
             <motion.button 
               whileTap={{ scale: 0.9 }} 
@@ -250,8 +257,6 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
               <Settings size={16} />
             </motion.button>
           )}
-        </div>
-        <div className="absolute top-4 right-4 flex space-x-2 z-20">
           <motion.button 
             whileTap={{ scale: 0.9 }} 
             onClick={() => setShowShareModal(true)}
@@ -397,10 +402,10 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
                     </div>
                   )}
                   <div className="absolute bottom-3 left-3 right-3 z-20">
-                    <p className="text-white text-sm font-bold truncate tracking-wide">{collection.title}</p>
-                    <p className="text-white/80 text-[10px] mt-0.5 flex items-center">
+                    <div className="text-white text-sm font-bold truncate tracking-wide">{collection.title}</div>
+                    <div className="text-white/80 text-[10px] mt-0.5 flex items-center">
                       <Layers size={10} className="mr-1" /> {collection.count} 个作品
-                    </p>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -523,7 +528,7 @@ function PortfolioCard({ item, index, onClick }: { item: any, index: number, onC
         </div>
         
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8">
-          <p className="text-[13px] font-bold text-white line-clamp-2 leading-snug">{item.title}</p>
+          <div className="text-[13px] font-bold text-white line-clamp-2 leading-snug">{item.title}</div>
         </div>
       </div>
     </motion.div>

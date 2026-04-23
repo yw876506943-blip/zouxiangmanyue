@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, Heart, Share2, MessageSquare } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Heart, Share2, MessageSquare } from '@/src/lib/icons';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 export function HomePostDetail({ posts }: { posts: any[] }) {
@@ -47,17 +47,19 @@ export function HomePostDetail({ posts }: { posts: any[] }) {
         className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center"
       >
         {/* Top Bar */}
-        <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-10 bg-gradient-to-b from-black/60 to-transparent">
-          <div className="text-white font-medium text-sm">
-            {currentImageIndex + 1} / {post.images.length}
-          </div>
+        <div className="absolute top-0 left-0 right-0 p-4 pt-12 flex items-center justify-between z-10 bg-gradient-to-b from-black/60 to-transparent">
           <motion.button 
             className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-md"
             whileTap={{ scale: 0.9 }}
             onClick={handleBack}
           >
-            <X size={20} />
+            <ChevronLeft size={24} />
           </motion.button>
+          <div className="text-white font-medium text-sm pr-20"> 
+            {/* Added pr-20 to keep it centered when offsetting the wechat capsule mentally */}
+            {currentImageIndex + 1} / {post.images.length}
+          </div>
+          <div className="w-10" /> {/* Empty spacer for flex-between balance */}
         </div>
 
         {/* Image Slider */}

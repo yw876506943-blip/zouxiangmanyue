@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Camera } from 'lucide-react';
+import { Camera } from '@/src/lib/icons';
 import { motion } from 'framer-motion';
 
 export function EditProfile({ profile, setProfile, userRole }: any) {

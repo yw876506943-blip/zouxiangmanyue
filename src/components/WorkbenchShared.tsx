@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Search, Plus, Check } from 'lucide-react';
+import { X, Search, Plus, Check } from '@/src/lib/icons';
 import { Reorder, motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { cn } from '@/src/lib/utils';
@@ -169,17 +169,17 @@ export function AddMediaForm({ onCancel, onSave, type, initialData }: { onCancel
   );
 }
 
-export function ActionSheet({ item, onClose, onUpdate, onDelete, onEdit }: any) {
+export function ActionSheet({ isOpen, item, onClose, onUpdate, onDelete, onEdit }: any) {
   return createPortal(
     <AnimatePresence>
-      {[
+      {isOpen && item && [
         <motion.div 
           key="overlay"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50"
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100]"
         />,
         <motion.div 
           key="sheet"
@@ -187,7 +187,7 @@ export function ActionSheet({ item, onClose, onUpdate, onDelete, onEdit }: any) 
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 p-4 pb-8 shadow-2xl"
+          className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-[100] p-4 pb-8 shadow-2xl"
         >
           <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6" />
           <h3 className="text-center text-[15px] font-bold text-slate-800 mb-6 line-clamp-1 px-8">{item.title}</h3>
