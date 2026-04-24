@@ -303,51 +303,44 @@ export function Home({ profile, setProfile, homeSettings, setHomeSettings, categ
             )}
           </div>
 
-          {profile.tags && profile.tags.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-1.5 mt-3 px-4">
-              {profile.tags.map((tag: string, index: number) => (
-                <span key={index} className="text-[10px] font-medium text-lavender-600 bg-lavender-50 px-2 py-0.5 rounded-full border border-lavender-100">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-          
           <p className="text-sm text-slate-600 mt-4 px-6 leading-relaxed">
             {profile.bio}
           </p>
 
-          {homeSettings.showWechat && profile.wechat && (
-            <div 
-              className="mt-3 text-xs font-medium text-slate-600 bg-white/60 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm border border-slate-100 flex items-center cursor-pointer active:scale-95 transition-transform"
-              onClick={() => {
-                navigator.clipboard.writeText(profile.wechat);
-                showToast('微信号已复制：' + profile.wechat);
-              }}
-            >
-              <MessageCircle size={14} className="mr-1.5 text-emerald-500" /> 微信: {profile.wechat}
-            </div>
-          )}
-
-          {homeSettings.showContact && (
-            <div className="flex items-center space-x-3 mt-6 w-full max-w-xs">
+          <div className="flex items-center justify-center space-x-2.5 mt-6 w-full px-6">
+            {homeSettings.showContact && (
               <Button 
                 onClick={() => window.location.href = `tel:${profile.phone}`}
-                className="flex-1 rounded-2xl h-12 shadow-lg shadow-lavender-500/20 text-[15px] font-bold"
+                className="flex-[1.2] rounded-2xl h-12 shadow-lg shadow-lavender-500/20 text-[14px] font-bold px-0"
               >
-                <Phone size={18} className="mr-2" />
+                <Phone size={16} className="mr-1.5" />
                 联系预约
               </Button>
+            )}
+            
+            {homeSettings.showWechat && profile.wechat && (
               <Button 
-                variant={isFollowing ? "outline" : "glass"} 
-                className={cn("flex-1 rounded-2xl h-12 text-[15px] font-bold transition-all", isFollowing ? "bg-slate-100 text-slate-600 border-transparent" : "bg-white text-rose-500 shadow-sm")}
-                onClick={() => setIsFollowing(!isFollowing)}
+                variant="glass"
+                className="flex-1 rounded-2xl h-12 bg-white text-emerald-500 shadow-sm border border-slate-100 text-[14px] font-bold px-0"
+                onClick={() => {
+                  navigator.clipboard.writeText(profile.wechat);
+                  showToast('微信号已复制：' + profile.wechat);
+                }}
               >
-                <Heart size={18} className={cn("mr-2 transition-transform", isFollowing ? "fill-rose-500 text-rose-500 scale-110" : "")} />
-                {isFollowing ? '已关注' : '关注'}
+                <MessageCircle size={16} className="mr-1.5" />
+                加微信
               </Button>
-            </div>
-          )}
+            )}
+
+            <Button 
+              variant={isFollowing ? "outline" : "glass"} 
+              className={cn("flex-1 rounded-2xl h-12 text-[14px] font-bold transition-all px-0", isFollowing ? "bg-slate-100 text-slate-600 border-transparent" : "bg-white text-rose-500 shadow-sm border border-slate-100")}
+              onClick={() => setIsFollowing(!isFollowing)}
+            >
+              <Heart size={16} className={cn("mr-1.5 transition-transform", isFollowing ? "fill-rose-500 text-rose-500 scale-110" : "")} />
+              {isFollowing ? '已关注' : '关注'}
+            </Button>
+          </div>
         </div>
       </motion.div>
 

@@ -103,6 +103,15 @@ export function HomeSettings({
                     </button>
                   </div>
                   <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-700">显示微信按钮</span>
+                    <button 
+                      onClick={() => setHomeSettings({...homeSettings, showWechat: !homeSettings.showWechat})}
+                      className={cn("w-12 h-6 rounded-full transition-colors relative", homeSettings.showWechat ? "bg-emerald-400" : "bg-slate-200")}
+                    >
+                      <motion.div animate={{ x: homeSettings.showWechat ? 24 : 2 }} className="w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-slate-700">显示精选合集</span>
                     <button 
                       onClick={() => setHomeSettings({...homeSettings, showCollections: !homeSettings.showCollections})}

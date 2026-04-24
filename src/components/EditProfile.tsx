@@ -44,7 +44,29 @@ export function EditProfile({ profile, setProfile, userRole }: any) {
           />
         </div>
         
-        {userRole === 'creator' && (
+        {userRole === 'creator' && (() => {
+          const REGIONS: Record<string, string[]> = {
+            '北京': ['北京市'],
+            '上海': ['上海市'],
+            '天津': ['天津市'],
+            '重庆': ['重庆市'],
+            '广东': ['广州市', '深圳市', '珠海市', '东莞市', '佛山市'],
+            '浙江': ['杭州市', '宁波市', '温州市', '嘉兴市', '金华市'],
+            '江苏': ['南京市', '无锡市', '徐州市', '常州市', '苏州市'],
+            '四川': ['成都市', '绵阳市', '自贡市', '宜宾市'],
+            '湖南': ['长沙市', '株洲市', '湘潭市'],
+            '山东': ['济南市', '青岛市', '烟台市', '潍坊市'],
+            '河南': ['郑州市', '洛阳市', '开封市'],
+            '福建': ['福州市', '厦门市', '泉州市'],
+            '安徽': ['合肥市', '芜湖市', '蚌埠市'],
+            '湖北': ['武汉市', '黄石市', '宜昌市', '襄阳市'],
+            '陕西': ['西安市', '宝鸡市', '咸阳市'],
+          };
+          const locationParts = (profile.location || '北京 北京市').split(' ');
+          const province = REGIONS[locationParts[0]] ? locationParts[0] : '北京';
+          const city = (REGIONS[province] && REGIONS[province].includes(locationParts[1])) ? locationParts[1] : REGIONS[province][0];
+
+          return (
           <>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -70,16 +92,36 @@ export function EditProfile({ profile, setProfile, userRole }: any) {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-xs font-medium text-slate-500 mb-1 block">地址</label>
-                <input 
-                  type="text" 
-                  value={profile.location}
-                  onChange={(e) => setProfile({...profile, location: e.target.value})}
+            
+            <div>
+              <label className="text-xs font-medium text-slate-500 mb-1 block">所在地区</label>
+              <div className="grid grid-cols-2 gap-3">
+                <select
+                  value={province}
+                  onChange={(e) => {
+                    const newProv = e.target.value;
+                    const newCity = REGIONS[newProv][0];
+                    setProfile({...profile, location: `${newProv} ${newCity}`});
+                  }}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-lavender-500/50"
-                />
+                >
+                  {Object.keys(REGIONS).map(p => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+                <select
+                  value={city}
+                  onChange={(e) => setProfile({...profile, location: `${province} ${e.target.value}`})}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-lavender-500/50"
+                >
+                  {REGIONS[province].map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
               </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-medium text-slate-500 mb-1 block">电话号码</label>
                 <input 
@@ -89,26 +131,18 @@ export function EditProfile({ profile, setProfile, userRole }: any) {
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-lavender-500/50"
                 />
               </div>
+              <div>
+                <label className="text-xs font-medium text-slate-500 mb-1 block">微信号</label>
+                <input 
+                  type="text" 
+                  value={profile.wechat || ''}
+                  onChange={(e) => setProfile({...profile, wechat: e.target.value})}
+                  placeholder="输入微信号"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-lavender-500/50"
+                />
+              </div>
             </div>
-            <div>
-              <label className="text-xs font-medium text-slate-500 mb-1 block">微信号</label>
-              <input 
-                type="text" 
-                value={profile.wechat || ''}
-                onChange={(e) => setProfile({...profile, wechat: e.target.value})}
-                placeholder="输入微信号"
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-lavender-500/50"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-slate-500 mb-1 block">标签 (用逗号分隔)</label>
-              <input 
-                type="text" 
-                value={profile.tags.join(', ')}
-                onChange={(e) => setProfile({...profile, tags: e.target.value.split(',').map((t: string) => t.trim()).filter(Boolean)})}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-lavender-500/50"
-              />
-            </div>
+
             <div>
               <label className="text-xs font-medium text-slate-500 mb-1 block">简介</label>
               <textarea 
@@ -119,7 +153,8 @@ export function EditProfile({ profile, setProfile, userRole }: any) {
               />
             </div>
           </>
-        )}
+          );
+        })()}
       </div>
     </div>
   );
